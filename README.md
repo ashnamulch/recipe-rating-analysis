@@ -1,3 +1,9 @@
-# recipe-rating-analysis
+# Introduction
 
-# test
+# Data Cleaning and Exploratory Data Analysis
+
+# Framing a Prediction Problem
+
+# Baseline Model
+
+# Final Model
