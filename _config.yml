@@ -3,4 +3,4 @@ plugins:
 - jekyll-remote-theme # add this line to the plugins list if you already have one
 
 title: "Recipe Rating Analysis"
-description: "Ashna Mulchandani (mailto:mashna@umich.edu)"
+description: "Ashna Mulchandani [mashna@umich.edu](mailto:mashna@umich.ed)"
