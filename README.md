@@ -38,6 +38,7 @@ This reduced the influence of outliers, which may have skewed predictions.
 ></iframe>
 
 The histogram above shows the distribution of preparation times for recipes in the dataset. Most recipes require 20-50 minutes, with a sharp decline in recipes taking longer than 50 minutes. This shows that recipes with shorter preparation times are more common, potentially suggesting user prefrence for quicker dishes. 
+
 This insight ties back to our initial question: *What types of recipes tend to have higher ratings?* By understanding that shorter preparation times are more common, we can hypothesize that user ratings might favor recipes that are quicker and easier to prepare. 
 
 ## Bivariate Analysis
@@ -50,6 +51,7 @@ This insight ties back to our initial question: *What types of recipes tend to h
 ></iframe>
 
 I had hypothesized that older recipes on the website would have a greater number of ratings, and therefore a potentially higher average rating. The bar chart above shows the number of ratings submitted per year. There is a noticeable downward trend over time, with recipes from 2008 having the greatest number of ratings.
+
 This suggests that recipes that have been on the website for longer likely have more engagement. This is relevant to the initial question because it highlights the need to consider time-related factors when analyzing recipe ratings.
 
 # Framing a Prediction Problem
