@@ -1,3 +1,5 @@
+# Recipe Rating Analysis
+
 # Introduction
 
 The datasets used in this project contain recipes and ratings from [food.com](https://www.food.com). They contain the recipes and reviews posted since 2008. 
@@ -22,7 +24,33 @@ The cleaned dataset has . The columns that are relevant to this question are `mi
 - Recipes with over 1,000 calories were removed
 This reduced the influence of outliers, which may have skewed predictions.
 
-**Filtering nutrition percent daily values (PDVs):** Nutrition features like `total_fat`, `sugar`, and `protein` represent percentages of daily values. I capped these at 100%, keeping only realistic PDVs.
+**Filtering nutrition percent daily values (PDVs):** Nutrition features like `total_fat`, `sugar`, and `protein` represent percentages of daily values. I capped these at 100%, keeping only realistic PDVs. This made the nutritonal data more valuable for investigation by making it more realistic.
+
+**Handling missing values:** I replaced blank or `None` values with `np.nan` to standardize missing data across the dataset. Rows missing the target variable (`rating`) were removed at the time of modeling. This allowed for consistency in missing data during exploratory data analysis and predictive modeling. 
+
+## Univariate Analysis
+
+<iframe
+  src="assets/fig_prep_time.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+The histogram above shows the distribution of preparation times for recipes in the dataset. Most recipes require 20-50 minutes, with a sharp decline in recipes taking longer than 50 minutes. This shows that recipes with shorter preparation times are more common, potentially suggesting user prefrence for quicker dishes. 
+This insight ties back to our initial question: *What types of recipes tend to have higher ratings?* By understanding that shorter preparation times are more common, we can hypothesize that user ratings might favor recipes that are quicker and easier to prepare. 
+
+## Bivariate Analysis
+
+<iframe
+  src="assets/fig_ratings_per_year.html"
+  width="800"
+  height="600"
+  frameborder="0"
+></iframe>
+
+I had hypothesized that older recipes on the website would have a greater number of ratings, and therefore a potentially higher average rating. The bar chart above shows the number of ratings submitted per year. There is a noticeable downward trend over time, with recipes from 2008 having the greatest number of ratings.
+This suggests that recipes that have been on the website for longer likely have more engagement. This is relevant to the initial question because it highlights the need to consider time-related factors when analyzing recipe ratings.
 
 # Framing a Prediction Problem
 
