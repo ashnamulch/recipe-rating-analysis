@@ -22,21 +22,22 @@ The cleaned dataset has . The columns that are relevant to this question are `mi
 - Recipes with a preparation time of over 200 minutes were removed
 - Recipes with over 50 steps were removed
 - Recipes with over 1,000 calories were removed
+
 This reduced the influence of outliers, which may have skewed predictions.
 
 **Filtering nutrition percent daily values (PDVs):** Nutrition features like `total_fat`, `sugar`, and `protein` represent percentages of daily values. I capped these at 100%, keeping only realistic PDVs. This made the nutritonal data more valuable for investigation by making it more realistic.
 
 **Handling missing values:** I replaced blank or `None` values with `np.nan` to standardize missing data across the dataset. Rows missing the target variable (`rating`) were removed at the time of modeling. This allowed for consistency in missing data during exploratory data analysis and predictive modeling. 
 
-First 5 rows of the relevant columns of the cleaned table:
+**First 5 rows of the relevant columns of the cleaned table:**
 
-|     id |   minutes |   year_submitted |   month_submitted |   n_steps |   n_ingredients |   rating |   calories |   total_fat |   sugar |   sodium |   protein |   saturated_fat |   carbohydrates |
-|-------:|----------:|-----------------:|------------------:|----------:|----------------:|---------:|-----------:|------------:|--------:|---------:|----------:|----------------:|----------------:|
-| 333281 |        40 |             2008 |                10 |        10 |               9 |        4 |      138.4 |          10 |      50 |        3 |         3 |              19 |               6 |
-| 306168 |        40 |             2008 |                 5 |         6 |               9 |        5 |      194.8 |          20 |       6 |       32 |        22 |              36 |               3 |
-| 475785 |        90 |             2012 |                 3 |        17 |              13 |        5 |      267   |          30 |      12 |       12 |        29 |              48 |               2 |
-| 500166 |        20 |             2013 |                 5 |         5 |               9 |        4 |      249.4 |          26 |       4 |        6 |        39 |              39 |               0 |
-| 503475 |        50 |             2013 |                 7 |        10 |              10 |        5 |      358.2 |          30 |      62 |       14 |        19 |              54 |              12 |
+| name                                    |   minutes |   year_submitted |   month_submitted |   n_steps |   n_ingredients |   rating |   calories |   total_fat |   sugar |   sodium |   protein |   saturated_fat |   carbohydrates |
+|:----------------------------------------|----------:|-----------------:|------------------:|----------:|----------------:|---------:|-----------:|------------:|--------:|---------:|----------:|----------------:|----------------:|
+| 1 brownies in the world    best ever    |        40 |             2008 |                10 |        10 |               9 |        4 |      138.4 |          10 |      50 |        3 |         3 |              19 |               6 |
+| 412 broccoli casserole                  |        40 |             2008 |                 5 |         6 |               9 |        5 |      194.8 |          20 |       6 |       32 |        22 |              36 |               3 |
+| 2000 meatloaf                           |        90 |             2012 |                 3 |        17 |              13 |        5 |      267   |          30 |      12 |       12 |        29 |              48 |               2 |
+| 5 tacos                                 |        20 |             2013 |                 5 |         5 |               9 |        4 |      249.4 |          26 |       4 |        6 |        39 |              39 |               0 |
+| blepandekager   danish   apple pancakes |        50 |             2013 |                 7 |        10 |              10 |        5 |      358.2 |          30 |      62 |       14 |        19 |              54 |              12 |
 
 ## Univariate Analysis
 
@@ -80,10 +81,37 @@ This suggests that recipes that have been on the website for longer likely have 
 |   2017 |         4.43 | 172            |
 |   2018 |         4.78 | 98             |
 
+The table above provides an overview of the average recipe ratings and the number of recipes submitted each year. The `Avg Rating` column shows the average rating of recipes submitted in that year, while the `Recipe Count` column indicates how many recipes were submitted. 
 
+This table adds to the visual analysis by offering detailed insights into the trends. It answers part of the initial question by showing that recipe submissions vary greatly over the years, but average recipe ratings do not. 
+
+## Imputation
+
+After investigation, I found that the only two columns with missing values were `rating` and `description`. I did not perform any imputation since missing target values would have to be dropped in modeling and missing values in the `description` column were already filled with `np.nan` during data cleaning. 
 
 # Framing a Prediction Problem
 
+For the prediction problem, I am trying to predict the average rating of a recipe. This is a regression problem because the response variable, `rating`, is continuous. I chose this variable because it may lead to insights about what types of recipes users prefer, allowing recipe creators to reach their target audience and recipe users to find what recipes they like best. 
+
+The metric I chose to evaluate my model is mean absolute error (MAE). MAE directly measures the average absolute difference between predicted and actual ratings in the same unit as the target, `rating`, making it easily interpretable. Unlike mean squared error (MSE), MAE is less sensitive to outliers. Since we're predicting ratings on a fixed scale (1.0 to 5.0), MAE is a good choice to minimize the average deviation. 
+
+At the time of prediction, the variables I will be using include `n_steps` (the number of steps), `n_ingredients` (the number of ingredients),`minutes` (preparation time in minutes), `year_submitted` (the year the recipe was submitted), and `calories` (the amount of calories).
+
 # Baseline Model
 
+For the baseline model, I used a **linear regression** model to predict the **average rating** of recipes based on the number of ingredients (`n_ingredients`) and the number of steps (`n_steps`). Both of these features are **quantitative** variables, so I performed a **log transformation** using a `FunctionTransformer` to address any skewness in the data. This helps make sure that the features are distributed more normally, which can improve model performance. 
+
+The model was evaluated using **mean absolute error (MAE)**. The **training MAE** was 0.458, and the **testing MAE** was 0.464. This suggests that the model is performing similarly on both the training and testing data, meaning it is neither underfitting nor overfitting.
+
+While the model's performance was reasonable, I do not consider it to be "good" because the features used were very basic and lacked meaningful transformations. I also feel they do not encompass the most meaningful features in the prediction of average rating. The model could be improved by adding more features or using feature engineering techniques to capture more complex patterns in the data. 
+
 # Final Model
+
+For the final model, I added several features to capture more complexity in the data and improve the predictions:
+- **Polynomial features:** I applied **polynomial features** for `n_steps` and `minutes` to capture nonlinear relationships between these features and the target variable, `rating`. For example, the preparation time might not linearly correlate with ratings -- longer or shorter recipes could have more intricate impacts on the rating. Polynomials of this feature will allow the model to account for this.
+- **Log transformation:** I log-transformed the feature `n_ingredients` to account for skewness and outliers. Since the number of ingredients can vary greatly between recipes, this makes the distribution more normal, allowing the model to better learn from this feature.
+- **One-hot encoding for `year_submitted`:** Since the submission year is a **categorical** feature, I used **one-hot encoding** to turn this into multiple binary columns. This allows the model to treat each year as a distinct category, which may help in understanding trends over time.
+
+The modeling algorithm I used is **linear regression**, which works well with prediction of continuous variables. I used **grid search cross-validation (`GridSearchCV`)** to tune the hyperparameter of the **degree of polynomial**, to find the optimal complexity of the model. After running the grid search, I found the best degree for the polynomial and fitted the model with those optimal parameters.
+
+In terms of performance, the training and testing MAEs of the final model were only slightly better than those of the baseline model. The slight improvement comes from the added complexity of the new features and polynomial degree to reduce prediction errors and make the model more accurate.
