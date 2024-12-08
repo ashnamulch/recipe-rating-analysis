@@ -8,7 +8,7 @@ The datasets used in this project contain recipes and ratings from [food.com](ht
 
 Insights about patterns that make a recipe highly rated can help anyone improve their cooking. For example, recipe creators can design recipes that are more likely to be enjoyed by their community, while recipe searchers can more easily find recipes that they love.
 
-The cleaned dataset has . The columns that are relevant to this question are `minutes` (the preparation time in minutes), `submitted` (the year and month that the recipe was submitted), `nutrition` (nutritional information), `n_steps` (the number of steps), and `n_ingredients` (the number of ingredients). 
+The raw dataset has 83,782 rows, and the cleaned dataset used for modeling has 81,173 rows. The columns that are relevant to this question are `minutes` (the preparation time in minutes), `submitted` (the year and month that the recipe was submitted), `nutrition` (nutritional information), `n_steps` (the number of steps), and `n_ingredients` (the number of ingredients). 
 
 # Data Cleaning and Exploratory Data Analysis
 
@@ -114,4 +114,4 @@ For the final model, I added several features to capture more complexity in the 
 
 The modeling algorithm I used is **linear regression**, which works well with prediction of continuous variables. I used **grid search cross-validation (`GridSearchCV`)** to tune the hyperparameter of the **degree of polynomial**, to find the optimal complexity of the model. After running the grid search, I found the best degree for the polynomial and fitted the model with those optimal parameters.
 
-In terms of performance, the training and testing MAEs of the final model were only slightly better than those of the baseline model. The slight improvement comes from the added complexity of the new features and polynomial degree to reduce prediction errors and make the model more accurate.
+In terms of performance, the training MAE of the final model was 0.456, only slightly better than that of the baseline model, and the testing MAE did not change. The slight improvement in the training MAE comes from the added complexity of the new features and polynomial degree to reduce prediction errors and make the model more accurate. My hypothesis, after testing several different combinations of features, is that the testing error did not change because the features barely affect the average rating. This is potentially due to the imbalance of average rating values (most being above 4), as well as the lack of disparity between them. 
